@@ -36,39 +36,7 @@ module OmniAuth
 
       def authorize_params
         super
-      end
-
-      # def token_params
-      #   #params = options.token_params.merge(options_for("token")).merge(pkce_token_params)
-      #   #params
-      #   super.tap do |params|
-      #     binding.pry
-      #     params.delete(:client_id)
-      #     # params[:app_key] = options.client_id
-      #     # params[:app_secret] = options.client_secret
-      #   end
-      # end
-
-      # def callback_phase # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
-      #   error = request.params["error_reason"] || request.params["error"]
-      #   if !options.provider_ignores_state && (request.params["state"].to_s.empty? || !secure_compare(request.params["state"], session.delete("omniauth.state")))
-      #     fail!(:csrf_detected, CallbackError.new(:csrf_detected, "CSRF detected"))
-      #   elsif error
-      #     fail!(error, CallbackError.new(request.params["error"], request.params["error_description"] || request.params["error_reason"], request.params["error_uri"]))
-      #   else
-      #     self.access_token = build_access_token
-      #     #binding.pry
-      #     self.access_token = access_token.refresh! if access_token.respond_to?(:expired?) && access_token.expired?
-      #     super
-      #   end
-      # rescue ::OAuth2::Error, CallbackError => e
-      #   binding.pry
-      #   fail!(:invalid_credentials, e)
-      # rescue ::Timeout::Error, ::Errno::ETIMEDOUT, ::OAuth2::TimeoutError, ::OAuth2::ConnectionError => e
-      #   fail!(:timeout, e)
-      # rescue ::SocketError => e
-      #   fail!(:failed_to_connect, e)
-      # end      
+      end    
 
       protected
       
@@ -83,6 +51,7 @@ module OmniAuth
       end
 
 
+      # NOTE: Use below method incase of above didn't work
       # def build_access_token
       #   verifier = request.params["code"]
       #   params = {}.merge(token_params.to_hash(:symbolize_keys => true))  #:redirect_uri => callback_url
@@ -92,8 +61,6 @@ module OmniAuth
       #   params.each_key do |key|
       #     params_dup[key.to_s] = params_dup.delete(key) if key.is_a?(Symbol)
       #   end
-
-      #   puts "\n\n.......strategy....build_access_token....#{params_dup}.......\n"
       #   client.get_token(params_dup, opts)
       # end
 

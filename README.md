@@ -1,20 +1,26 @@
-# OmniAuth::Acumatica
+# OmniAuth::Tiktokshop
 
-OmniAuth OAuth2 strategy for Walmart Marketplace
+OmniAuth OAuth2 strategy for TikTokShop
 
 ## Usage
 
 Authorization Code Flow
-https://developer.walmart.com/doc/us/mp/us-mp-auth2/#606
+https://partner.tiktokshop.com/doc/page/63fd743c715d622a338c4e5a#Back%20To%20Top
 
 You must first register your application:
-https://developer.walmart.com/
+https://partner.tiktokshop.com/doc/page/63fd743e715d622a338c4e9c
+https://partner.tiktokshop.com/doc/page/63fd743d715d622a338c4e69
 
-When you register the application, you will get an 'Client ID' and 'Client Secret'. These need to be provided when you configure the strategy (this example assumes the values are available in environment variables):
+
+When you register the application, you will get an 'App Key' and 'App Secret'. These need to be provided when you configure the strategy (this example assumes the values are available in environment variables):
 
 ```
 Rails.application.config.middleware.use OmniAuth::Builder do
-  provider :walmart_marketplace, ENV['CLIENT_ID'], ENV['CLIENT_SECRET']
+    provider :tiktokshop, ENV['app_key'], ENV['app_secret'],
+        callback_url: "https:www.yourdomain.com/auth/tiktokshop_us/callback",
+        authorize_params:  { app_key: ENV['app_key'] },
+        token_params: { app_key: ENV['app_key'], app_secret: ENV['app_secret'] },
+        name: 'tiktokshop_us'
 end
 ```
 
@@ -22,7 +28,7 @@ end
 
 Add this line to your application's Gemfile:
 
-    gem 'omniauth-walmart'
+    gem 'omniauth-tiktokshop'
 
 And then execute:
 
@@ -30,25 +36,34 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install omniauth-walmart
+    $ gem install omniauth-tiktokshop
 
 ## Response Example
 
 Expected from 3dcart:
 
 ```
-{
-    "access_token": "eyJraWQiOiI1MWY3MjM0Ny0wYWY5LTRhZ.....",
-    "refresh_token": "APXcIoTpKMH9OQN....",
-    "token_type": "Bearer",
-    "expires_in": 900
+{    
+    "code":0,    
+    "message":"success",    
+    "data":{    
+            "access_token":"ROW_Fw8rBwAAAAAkW03FYd09DG-9INtpw361hWthei8S3fHX8iPJ5AUv99fLSCYD9-UucaqxTgNRzKZxi5-tfFMtdWqglEt5_iCk",    
+            "access_token_expire_in":1660556783,    
+            "refresh_token":"NTUxZTNhYTQ2ZDk2YmRmZWNmYWY2YWY2YzkxNGYwNjQ3YjkzYTllYjA0YmNlMw",    
+            "refresh_token_expire_in":1691487031,    
+            "open_id":"7010736057180325637",    
+            "seller_name":"Jjj test shop",    
+            "seller_base_region":"ID",    
+            "user_type":0    
+        },    
+    "request_id":"2022080809462301024509910319695C45"    
 }
 ```
 
 
 ## Contributing
 
-1. Fork it ( https://github.com/dropstream/omniauth-walmart/fork )
+1. Fork it ( https://github.com/dropstream/omniauth-tiktokshop/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)

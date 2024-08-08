@@ -23,7 +23,7 @@ describe OmniAuth::Strategies::Tiktokshop do
       end
 
       it 'has default token url' do
-        expect(subject.options.client_options.token_url).to eq("#{base_url}/api/v2/token")
+        expect(subject.options.client_options.token_url).to eq("#{base_url}/api/v2/token/get")
       end
     end
   end
