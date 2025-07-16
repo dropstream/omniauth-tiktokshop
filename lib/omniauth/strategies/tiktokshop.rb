@@ -27,6 +27,7 @@ module OmniAuth
         hash['refresh_token'] = access_token.refresh_token 
         hash['expires_at'] = access_token.params['access_token_expire_in']
         hash['refresh_token_expires_at'] = access_token.params['refresh_token_expire_in']
+        hash['shop_cipher'] = get_shop_cipher(access_token.token)
         hash
       end
 
@@ -39,6 +40,28 @@ module OmniAuth
       end    
 
       protected
+
+      def get_shop_cipher(token)
+        log :info, 'Calling API to get Shop Cipher.'
+
+        param = { "app_key" => options.token_params.app_key, "timestamp" => Time.now.utc.to_i }
+        request_path = '/authorization/202309/shops'
+
+        param[:sign] = generate_signature(param, request_path)
+
+        response = HTTParty.get("https://open-api.tiktokglobalshop.com/#{request_path}?#{param.to_query}", :headers => { 'Content-Type' => 'application/json', "x-tts-access-token" => token })
+        JSON.parse(response.body).dig('data', 'shops', 0, 'cipher')
+      rescue => e
+        nil
+      end
+
+      def generate_signature(query_params, path)
+        secret_key = options.token_params.app_secret
+        query_string = query_params.sort.to_h.map { |k, v| "#{k}#{v}" }.join('')
+
+        encoding_string = [secret_key, path, query_string, secret_key].reject(&:blank?).join('')
+        OpenSSL::HMAC.hexdigest('sha256', secret_key, encoding_string)
+      end
       
       def build_access_token
         params = {
